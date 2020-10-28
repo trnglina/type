@@ -185,8 +185,19 @@
       button.title = 'Close this text area'
 
       button.addEventListener('click', e => {
-        e.target.parentNode.remove()
-        writeState()
+        const button = e.target
+        const editor = button.parentNode.firstChild
+
+        let del = true
+
+        if (editor.value.trim() != '') {
+          del = confirm("Do you want to close this text area? All the text stored inside will be lost.")
+        }
+
+        if (del) {
+          button.parentNode.remove()
+          writeState()
+        }
       })
 
       return button
