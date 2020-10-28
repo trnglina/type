@@ -1,0 +1,248 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <title>Typing Pad</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Simple persistent text areas">
+  <meta name="author" content="Trnglina">
+
+  <style>
+    body {
+      background: url('data:image/gif;base64,R0lGODlhBAAEAIAAAP///zMzMyH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNi4wLWMwMDIgNzkuMTY0NDYwLCAyMDIwLzA1LzEyLTE2OjA0OjE3ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgMjEuMiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OEU3RjUzRjgxODhFMTFFQjhFQTNCNzY3RDNDRjM1NEMiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OEU3RjUzRjkxODhFMTFFQjhFQTNCNzY3RDNDRjM1NEMiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4RTdGNTNGNjE4OEUxMUVCOEVBM0I3NjdEM0NGMzU0QyIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4RTdGNTNGNzE4OEUxMUVCOEVBM0I3NjdEM0NGMzU0QyIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgH//v38+/r5+Pf29fTz8vHw7+7t7Ovq6ejn5uXk4+Lh4N/e3dzb2tnY19bV1NPS0dDPzs3My8rJyMfGxcTDwsHAv769vLu6ubi3trW0s7KxsK+urayrqqmop6alpKOioaCfnp2cm5qZmJeWlZSTkpGQj46NjIuKiYiHhoWEg4KBgH9+fXx7enl4d3Z1dHNycXBvbm1sa2ppaGdmZWRjYmFgX15dXFtaWVhXVlVUU1JRUE9OTUxLSklIR0ZFRENCQUA/Pj08Ozo5ODc2NTQzMjEwLy4tLCsqKSgnJiUkIyIhIB8eHRwbGhkYFxYVFBMSERAPDg0MCwoJCAcGBQQDAgEAACH5BAAAAAAALAAAAAAEAAQAAAIEDI5oWQA7');
+      image-rendering: pixelated;
+
+      display: flex;
+      margin: 0 0 10px;
+      
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    #editors {
+      font-size: 0;
+      white-space: nowrap;
+
+      display: flex;
+      padding: 10px 0 10px 10px;
+      overflow-x: auto;
+    }
+
+    #editors .editor:last-child {
+      margin-right: 10px;
+    }
+
+    .editor {
+      display: inline-flex;
+      align-items: stretch;
+      height: 100%;
+
+      position: relative;
+    }
+
+    .editor-pad {
+      background: white;
+
+      font-size: 14pt;
+
+      display: inline-block;
+      padding: 20px;
+      min-width: 100px;
+
+      border: 1px transparent solid;
+      border-radius: 5px;
+      box-shadow: rgb(190, 190, 190) 2px 2px 2px;
+      outline: none;
+      resize: none;
+    }
+
+    .editor-pad:focus {
+      border: 1px black solid;
+    }
+
+    .editor-separator {
+      cursor: col-resize;
+
+      display: inline-block;
+      width: 30px;
+    }
+
+    .editor-button {
+      background: white;
+
+      font-size: 12pt;
+
+      padding: 0 2px 5px 0;
+      width: 22px;
+      height: 22px;
+
+      position: absolute;
+      right: 4px;
+
+      border: 1px black outset;
+      border-radius: 5px 100% 100% 5px;
+      box-shadow: rgb(190, 190, 190) 1px 1px 2px;
+      outline: none;
+    }
+
+    .editor-button:active,
+    .editor-button:focus {
+      border: 1px black inset;
+    }
+
+    .editor-close-button {
+      top: 26px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="editors"></div>
+
+  <script type="text/javascript">
+    /* Data */
+  
+    const dataKey = 'typadState'
+    
+    const resetState = () => {
+      window.localStorage.clear()
+      window.localStorage.setItem(dataKey, JSON.stringify([{width: '550px', scroll: 0, textContent: ''}]))
+    }
+    
+    const writeState = () => {
+      const editors = Array.from(document.getElementsByClassName('editor-pad'))
+      window.localStorage.setItem(dataKey, JSON.stringify(editors.map(e => ({width: e.style.width, scroll: e.scrollTop, textContent: e.value}))))
+    }
+
+    const readState = () => {
+      const data = window.localStorage.getItem(dataKey)
+      if (data == null) { resetState(); return readState() }
+
+      const state = JSON.parse(data)
+      if (!Array.isArray(state)) { resetState(); return readState() }
+      if (state.length < 1) { resetState(); return readState() }
+
+      return state
+    }
+
+    /* DOM */
+
+    const makeEditorPad = () => {
+      const pad = document.createElement('textarea')
+      pad.className = 'editor-pad'
+
+      pad.addEventListener('change', e => {
+        writeState()
+      })
+
+      pad.addEventListener('input', e => {
+        writeState()
+      })
+
+      pad.addEventListener('scroll', e => {
+        writeState()
+      })
+
+      return pad
+    }
+
+    const updateEditorPad = (pad, width, scroll, content) => {
+      pad.value = content
+      pad.style.width = width
+      pad.scrollTop = scroll
+    }
+
+    const makeEditorNewButton = () => {
+      const button = document.createElement('button')
+      button.className = 'editor-button editor-new-button'
+      button.innerText = '+'
+      button.title = 'Insert a new text area to the right'
+
+      button.addEventListener('click', e => {
+        const editor = e.target.parentNode
+        const pad = makeEditorPad()
+        editor.parentNode.insertBefore(makeEditor(pad), editor.nextSibling)
+        updateEditorPad(pad, '550px', 0, '')
+        pad.focus()
+        writeState()
+      })
+
+      return button
+    }
+
+    const makeEditorCloseButton = () => {
+      const button = document.createElement('button')
+      button.className = 'editor-button editor-close-button'
+      button.innerText = '×'
+      button.title = 'Close this text area'
+
+      button.addEventListener('click', e => {
+        e.target.parentNode.remove()
+        writeState()
+      })
+
+      return button
+    }
+
+    const makeEditorSeparator = () => {
+      const separator = document.createElement('div')
+      separator.className = 'editor-separator'
+      separator.draggable = true
+
+      separator.addEventListener('dragstart', e => {
+        const separator = e.target
+        const pad = separator.previousSibling
+
+        pad.style.opacity = '0.6'
+        separator.setAttribute('typad-drag-start', e.screenX)
+      })
+
+      separator.addEventListener('dragend', e => {
+        const separator = e.target
+        const pad = separator.previousSibling
+
+        const delta = e.screenX - separator.getAttribute('typad-drag-start')
+        pad.style.width = `${Number.parseFloat(pad.style.width) + delta}px`
+        pad.style.opacity = '1'
+        separator.removeAttribute('typad-drag-start')
+
+        writeState()
+      })
+      
+      return separator
+    }
+
+    const makeEditor = (pad) => {
+      const editor = document.createElement('div')
+      editor.className = 'editor'
+
+      editor.appendChild(pad)
+      editor.appendChild(makeEditorSeparator())
+      editor.appendChild(makeEditorNewButton())
+      editor.appendChild(makeEditorCloseButton())
+
+      return editor
+    }
+
+    /* Init */
+
+    (() => {
+      const state = readState()
+      const container = document.getElementById('editors')
+      for (let i = 0; i < state.length; i++) {
+        const pad = makeEditorPad()
+        container.appendChild(makeEditor(pad))
+        updateEditorPad(pad, state[i].width, state[i].scroll, state[i].textContent)
+      }
+    })()
+  </script>
+</body>
+
+</html>
