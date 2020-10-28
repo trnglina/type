@@ -57,14 +57,14 @@
       min-width: 100px;
 
       border: 1px transparent solid;
-      border-radius: 5px;
-      box-shadow: rgb(190, 190, 190) 2px 2px 2px;
+      border-radius: 2px;
+      box-shadow: #bebebe 2px 2px 2px;
       outline: none;
       resize: none;
     }
 
     .editor-pad:focus {
-      border: 1px black solid;
+      border: 1px #464646 solid;
     }
 
     .editor-separator {
@@ -72,11 +72,59 @@
 
       display: inline-block;
       width: 30px;
+
+      position: relative;
+    }
+
+    .editor-separator::before {
+      content: '';
+      
+      position: absolute;
+      top: 0;
+      right: 14px;
+      bottom: 0;
+      left: 14px;
+
+      background: white;
+      opacity: 0.6;
+
+      border-radius: 2px;
+    }
+
+    .editor-separator::after {
+      content: 'Drag me to resize';
+
+      color: #464646;
+      font-size: 8pt;
+      font-family: Arial, Helvetica, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+
+      background: white;
+      opacity: 0.6;
+      
+      display: block;
+      padding: 6px 2px 4px 2px;
+      writing-mode: vertical-rl;
+
+      position: absolute;
+      bottom: 20px;
+      left: 8px;
+
+      border-radius: 2px;
+    }
+
+    .editor-separator:hover::after,
+    .editor-separator:hover::before,
+    .editor-separator:focus::after,
+    .editor-separator:focus::before {
+      opacity: 1;
     }
 
     .editor-button {
       background: white;
-
+      
+      color: #464646;
       font-family: Arial, Helvetica, sans-serif;
       font-size: 12pt;
 
@@ -87,15 +135,16 @@
       position: absolute;
       right: 4px;
 
-      border: 1px black outset;
+      border: 1px #bebebe outset;
       border-radius: 5px 100% 100% 5px;
-      box-shadow: rgb(190, 190, 190) 1px 1px 2px;
+      box-shadow: #bebebe 1px 1px 2px;
       outline: none;
     }
 
     .editor-button:active,
     .editor-button:focus {
-      border: 1px black inset;
+      border: 1px #464646 inset;
+      box-shadow: none;
     }
 
     .editor-close-button {
@@ -206,6 +255,7 @@
     const makeEditorSeparator = () => {
       const separator = document.createElement('div')
       separator.className = 'editor-separator'
+      separator.setAttribute('aria-hidden', true)
       separator.draggable = true
 
       const resizeStart = (e) => {
