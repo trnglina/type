@@ -2,7 +2,7 @@
 
 Simple, client-local persistent text areas.
 
-![](https://i.imgur.com/B1Bauva.png)
+![](https://i.imgur.com/cDsaHGM.png)
 
 ## Compatibility
 
