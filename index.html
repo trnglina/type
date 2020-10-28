@@ -208,24 +208,39 @@
       separator.className = 'editor-separator'
       separator.draggable = true
 
-      separator.addEventListener('dragstart', e => {
+      const resizeStart = (e) => {
+        console.log(e)
         const separator = e.target
         const pad = separator.previousSibling
+        const x = e.screenX ? e.screenX : e.changedTouches[0].screenX
 
         pad.style.opacity = '0.6'
-        separator.setAttribute('typad-drag-start', e.screenX)
-      })
+        separator.setAttribute('typad-drag-start', x)
+      }
 
-      separator.addEventListener('dragend', e => {
+      const resizeEnd = (e) => {
+        console.log(e)
         const separator = e.target
         const pad = separator.previousSibling
+        const x = e.screenX ? e.screenX : e.changedTouches[0].screenX
 
-        const delta = e.screenX - separator.getAttribute('typad-drag-start')
+        const delta = x - separator.getAttribute('typad-drag-start')
         pad.style.width = `${Number.parseFloat(pad.style.width) + delta}px`
         pad.style.opacity = '1'
         separator.removeAttribute('typad-drag-start')
 
         writeState()
+      }
+
+      separator.addEventListener('dragstart', resizeStart)
+      separator.addEventListener('dragend', resizeEnd)
+      separator.addEventListener('touchstart', e => {
+        e.preventDefault()
+        resizeStart(e)
+      })
+      separator.addEventListener('touchend', e => {
+        e.preventDefault()
+        resizeEnd(e)
       })
       
       return separator
