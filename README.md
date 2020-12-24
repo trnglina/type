@@ -1,4 +1,4 @@
-# typad
+# type
 
 Simple, client-local persistent text areas.
 
